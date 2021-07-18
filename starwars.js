@@ -1,4 +1,5 @@
 import { filmList, intro } from './elements.js';
+import { friendlyFetch } from './friendly-fetch.js';
 import { play } from './music.js';
 import { restartAnimation } from './restart-animation.js';
 import { romanize } from './roman.js';
@@ -10,7 +11,7 @@ play(
   {
     audioUrl: 'audio/tema-sw.mp3',
     title: 'Star Wars Theme',
-    artist: 'Unknow',
+    artist: 'John Williams',
     coverImageUrl: './imgs/logo.svg',
   },
   document.body
@@ -31,18 +32,13 @@ async function fillFilmList() {
       .sort((a, b) => (a.episode_id < b.episode_id ? -1 : 1))
       .forEach((film, index) => filmList.appendChild(FilmItem(film, index)));
   }
-  
+
   restartAnimation(intro);
 }
 
 async function loadFilms() {
-  films = (
-    await fetch(`${API_ENDPOINT}/films`)
-      .then((response) => response.json())
-      .then(({ results }) => results)
-  );
-
-  console.log(films); 
+  films = await friendlyFetch(`${API_ENDPOINT}/films`);
+  console.log(films);
 }
 
 function loadIntroduction(film) {
